@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install rn-packager -g
+$ npm install akpack -g
 ```
 
 ## Dependences
@@ -18,11 +18,11 @@ $ npm install rn-packager -g
 ```
 "rn-core" 是 `0.19.0` 的全量sdk工程，从官方的 "react-native" 依赖中抽取了必要的代码，做了精简。
 
-## rnpackager bundle
+## akpack bundle
 > 在项目工程根目录下执行打包命令，默认不打包框架代码及polyfills
 
 ```
-$ rnpackager bundle --entry-file  entry/file/path.js --bundle-output out/file/path.jsbundle --platform ios
+$ akpack bundle --entry-file  entry/file/path.js --bundle-output out/file/path.jsbundle --platform ios
 ```
 
 Options, 参数参考react-native命令，增加了参数：
@@ -34,19 +34,19 @@ Options, 参数参考react-native命令，增加了参数：
 ## Bundle sdk
 
 ```
-$ rnpackager bundle --entry-file node_modules/rn-core/react-native/Libraries/react-native/react-native.js --bundle-output ~/Desktop/react-native-debug.js --platform ios --include-framework
+$ akpack bundle --entry-file node_modules/rn-core/react-native/Libraries/react-native/react-native.js --bundle-output ~/Desktop/react-native-debug.js --platform ios --include-framework
 ```
 
 ## Server
 
 ```
-$ rnpackager start
+$ akpack start
 ```
 url请求参数新增 `framework=true` `runBeforeMainModule=[]`
 
 ## Programmatic API
 ```
-var RNPackager = require('rn-packager');
+var RNPackager = require('akpack');
 
 gulp.task('task', function(){
   return RNPackager.bundle({
@@ -62,7 +62,7 @@ gulp.task('task', function(){
 ```
 $ cd tests
 $ npm i
-$ rnpackager start
+$ akpack start
 ```
 Visit:
 
