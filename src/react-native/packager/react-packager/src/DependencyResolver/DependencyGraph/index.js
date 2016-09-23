@@ -21,6 +21,13 @@ const ResolutionRequest = require('./ResolutionRequest');
 const ResolutionResponse = require('./ResolutionResponse');
 const HasteMap = require('./HasteMap');
 const DeprecatedAssetMap = require('./DeprecatedAssetMap');
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+const os = require('os');  
+const QRCode = require('terminal-qrcode');
 
 const defaultActivity = {
   startEvent: () => {},
@@ -130,8 +137,30 @@ class DependencyGraph {
           return this._hasteMap.build().then(() => activity.endEvent(hasteActivity));
         }),
       this._deprecatedAssetMap.build(),
-    ]).then(() =>
-      activity.endEvent(depGraphActivity)
+    ]).then(() =>{
+      activity.endEvent(depGraphActivity);
+      var  hostName=os.hostname();  
+    for(let i=0;i<os.networkInterfaces().en0.length;i++){  
+      if(os.networkInterfaces().en0[i].family=='IPv4'){  
+        var IPv4=os.networkInterfaces().en0[i].address;  
+      }  
+    }  
+  rl.question('请输入url参数，例如model=XX&uuid=XX： ', (answer) => {
+    rl.close();
+    if(answer){ answer='&'+answer; }
+    var url = 'react://rn/demo?rctUrl=http://'+IPv4+':8081/index.bundle&platform=ios&dev=true&framework=true'+answer;
+    QRCode.drawText(url,function(err, qrcode) {
+        if (!err) {
+          console.log('请使用阿里智能app扫描下面的二维码码进入页面：\n',qrcode+'\n二维码信息：'+url);
+        }
+        else{
+          console.log('请将如下地址生成二维码，用阿里智能app扫码进入页面：'+url );  
+        }
+    });
+
+  });
+
+      }
     );
 
     return this._loading;
