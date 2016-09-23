@@ -27,7 +27,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 const os = require('os');  
-const QRCode = require('terminal-qrcode');
+const QRcode = require('qrcode-terminal');
 
 const defaultActivity = {
   startEvent: () => {},
@@ -159,14 +159,15 @@ class DependencyGraph {
         indexFile = 'index';
       }
       var url = 'react://rn/demo?rctUrl=http://'+IPv4+':8081/' + indexFile +'.bundle&platform=ios&dev=true&framework=true'+param;
-      QRCode.drawText(url,function(err, qrcode) {
-          if (!err) {
-            console.log('请使用阿里智能app扫描下面的二维码进入页面：\n',qrcode+'\n二维码信息：'+url);
-          }
-          else{
-            console.log('请将如下地址生成二维码，用阿里智能app扫码进入页面：'+url );  
-          }
-      });
+      try{
+        console.log('请使用阿里智能app扫描下面的二维码进入页面：\n');
+        QRcode.generate(url, {small: true});
+        console.log('\n二维码信息：'+url)
+      }catch(err){
+        if(err){
+          console.log('请将如下地址生成二维码，用阿里智能app扫码进入页面：'+url );  
+        }
+      }
     });
   });
 
