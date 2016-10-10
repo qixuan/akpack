@@ -22,9 +22,8 @@
  const HasteMap = require('./HasteMap');
  const DeprecatedAssetMap = require('./DeprecatedAssetMap');
  const readline = require('readline');
-
  const os = require('os');
- const QRCode = require('terminal-qrcode');
+const QRcode = require('qrcode-terminal');
  const defaultActivity = {
      startEvent: () => {},
      endEvent: () => {},
@@ -141,25 +140,41 @@
              });
 
              var hostName = os.hostname();
+             if (!os.networkInterfaces().en0) {
+                 return;
+             }
              for (let i = 0; i < os.networkInterfaces().en0.length; i++) {
                  if (os.networkInterfaces().en0[i].family == 'IPv4') {
                      var IPv4 = os.networkInterfaces().en0[i].address;
                  }
              }
-             rl.question('请输入url参数，例如model=XX&uuid=XX： ', (answer) => {
-                 rl.close();
-                 if (answer) { answer = '&' + answer; }
-                 var url = 'react://rn/demo?rctUrl=http://' + IPv4 + ':8081/index.bundle&platform=ios&dev=true&framework=true' + answer;
-                 QRCode.drawText(url, function(err, qrcode) {
-                     if (!err) {
-                         console.log('请使用阿里智能app扫描下面的二维码码进入页面：\n', qrcode + '\n二维码信息：' + url);
+             rl.question('请输入url参数，例如model=XX&uuid=XX： ', (param) => {
+                 rl.question('请输入入口文件名，默认为index.js： ', (indexFile) => {
+                     rl.close();
+                     if (param) {
+                         param = '&' + param;
+                     }
+                     if (indexFile) {
+                         indexFile = indexFile.split('.')[0]
                      } else {
-                         console.log('请将如下地址生成二维码，用阿里智能app扫码进入页面：' + url);
+                         indexFile = 'index';
+                     }
+                     var url = 'react://rn/demo?rctUrl=http://' + IPv4 + ':8081/' + indexFile + '.bundle&platform=ios&dev=true&framework=true' + param;
+                     try {
+                         console.log('请使用阿里智能app扫描下面的二维码进入页面：\n');
+                         QRcode.generate(url, { small: true });
+                         console.log('\n二维码信息：' + url)
+                     } catch (err) {
+                         if (err) {
+                             console.log('请将如下地址生成二维码，用阿里智能app扫码进入页面：' + url);
+                         }
                      }
                  });
-
              });
+
+
          });
+
 
          return this._loading;
      }
